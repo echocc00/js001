@@ -49,14 +49,10 @@
 
 ### 当前状态
 
-- **本地 git 已 reset**，需用户在终端执行同步:
-  ```powershell
-  cd F:\codex\js001\Hydro
-  git fetch origin
-  git checkout master
-  git checkout -b base-deploy origin/base-deploy
-  ```
-
+- **所有代码已推送到 GitHub** (master: b1af179, base-deploy: b1af179)
+- CodeGraph 已安装并索引 (450 文件, 6416 节点, 5936 边)
+- 本地 git 因沙箱权限限制不可靠，所有 git 操作走 GitHub REST API
+- 用户本地终端 git 可用于手动操作 (fetch/checkout 等)
 ### 下一步 (Day 2+)
 
 1. 用户同步本地 git 后 → 确认本地仓库状态
