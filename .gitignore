@@ -67,3 +67,9 @@ __*
 
 packages/*/public/assets
 node_modules.*
+
+# Project Management
+*.env
+.env.*
+backup-*.zip
+CHANGELOG.md.backup

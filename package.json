@@ -28,7 +28,12 @@
         "start": "packages/hydrooj/bin/hydrooj.js",
         "postinstall": "node build/prepare.js",
         "gen-patch": "node -r @hydrooj/register build/gen-patch.ts",
-        "hydrooj": "./node_modules/.bin/hydrooj"
+        "hydrooj": "./node_modules/.bin/hydrooj",
+        "release": "standard-version",
+        "release:minor": "standard-version --release-as minor",
+        "release:patch": "standard-version --release-as patch",
+        "release:major": "standard-version --release-as major",
+        "commit": "git-cz"
     },
     "version": "1.0.0",
     "license": "AGPL-3.0-only",
@@ -43,6 +48,7 @@
         "chai": "^6.2.2",
         "cross-env": "^10.1.0",
         "cross-spawn": "^7.0.6",
+        "cz-conventional-changelog": "^3.3.0",
         "esbuild": "0.25.2",
         "eslint": "^9.39.4",
         "eslint-import-resolver-typescript": "^4.4.4",
@@ -50,7 +56,9 @@
         "fs-extra": "^11.3.5",
         "globals": "^17.6.0",
         "globby": "~14.0.2",
+        "https-proxy-agent": "^9.0.0",
         "inspectpack": "^4.7.1",
+        "isomorphic-git": "^1.38.1",
         "mongodb-memory-server": "11.0.1",
         "nyc": "^18.0.0",
         "ora": "^9.4.0",
@@ -58,6 +66,7 @@
         "package-json": "^10.0.1",
         "semver": "^7.8.0",
         "simple-git": "^3.36.0",
+        "standard-version": "^9.5.0",
         "supertest": "^7.2.2",
         "supports-hyperlinks": "^4.4.0",
         "typescript": "5.8.3",
@@ -66,5 +75,11 @@
     "resolutions": {
         "mongodb": "^7.0.0",
         "@types/express-serve-static-core": "patch:@types/express-serve-static-core@npm%3A4.19.6#~/.yarn/patches/@types-express-serve-static-core-npm-4.19.6-cc0017aaf4.patch"
+    },
+    "packageManager": "yarn@4.14.1",
+    "config": {
+        "commitizen": {
+            "path": "cz-conventional-changelog"
+        }
     }
 }
