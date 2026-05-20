@@ -47,13 +47,23 @@
   - 上游跟踪: `hydro-dev/Hydro`
 - [x] 本地 Git 重新初始化（等待用户 fetch）
 
+### 已完成 (Day 2)
+
+- [x] 测试机部署完成 (http://8.133.200.235:8888)
+- [x] 关键踩坑: Node.js 必须 >=22, 前端需单独 yarn build:ui
+- [x] MongoDB 7 内存限制 0.3GB
+- [x] PM2 开机自启配置
+- [x] 增量更新流程验证
+
 ### 当前状态
 
 - **所有代码已推送到 GitHub** (master: b1af179, base-deploy: b1af179)
 - CodeGraph 已安装并索引 (450 文件, 6416 节点, 5936 边)
 - 本地 git 因沙箱权限限制不可靠，所有 git 操作走 GitHub REST API
 - 用户本地终端 git 可用于手动操作 (fetch/checkout 等)
-### 下一步 (Day 2+)
+### 下一步 (Day 3)
+
+1. 第一个插件开发（登录扩展 / 自定义排行榜 / 题目标签）
 
 1. 用户同步本地 git 后 → 确认本地仓库状态
 2. 测试机（Linux + Docker）:

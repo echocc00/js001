@@ -31,7 +31,7 @@ free -h | grep Swap   # 确认 Swap 已启用
 
 ### 1.3 安装 Node.js 20 LTS
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
 node --version   # 应显示 v20.x
 ```
@@ -119,6 +119,9 @@ node packages/hydrooj/bin/hydrooj.js cli user setJudge 2
 # 设置监听地址
 node packages/hydrooj/bin/hydrooj.js cli system set server.host 0.0.0.0
 node packages/hydrooj/bin/hydrooj.js cli system set server.port 8888
+
+# 构建前端 UI (必须！否则页面 404)
+yarn build:ui
 
 # PM2 启动
 pm2 start packages/hydrooj/bin/hydrooj.js --name hydro-backend
