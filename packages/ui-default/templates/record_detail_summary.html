@@ -16,4 +16,5 @@
     <dt>{{ _('Peak Memory') }}</dt>
     <dd>{% if _ge %}&ge;{% endif %}{{ size(rdoc.memory, 1024) }}</dd>
   {% endif %}
+  {% include 'ai_analysis.html' ignore missing %}
 </dl>

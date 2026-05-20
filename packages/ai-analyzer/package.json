@@ -1,0 +1,10 @@
+﻿{
+    "name": "@hydrooj/ai-analyzer",
+    "version": "0.1.0",
+    "description": "AI-powered code analysis for homework submissions",
+    "main": "index.ts",
+    "repository": "https://github.com/hydro-dev/Hydro",
+    "author": "",
+    "license": "AGPL-3.0-or-later",
+    "preferUnplugged": true
+}

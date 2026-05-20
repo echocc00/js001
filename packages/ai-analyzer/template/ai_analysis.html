@@ -1,0 +1,35 @@
+{% if rdoc.aiAnalysis %}
+  {% if rdoc.aiAnalysis.error %}
+  <dt>{{ _('AI Code Analysis') }}</dt>
+  <dd>
+    <span class="text-text">{{ rdoc.aiAnalysis.error }}</span>
+  </dd>
+  {% else %}
+  <dt>{{ _('Feasibility Score') }}</dt>
+  <dd>
+    <span style="color: {{ utils.status.getScoreColor(rdoc.aiAnalysis.score * 10) }}">{{ rdoc.aiAnalysis.score }}</span> / 10
+  </dd>
+  <dt>{{ _('AI Code Analysis') }}</dt>
+  <dd>{{ rdoc.aiAnalysis.feasibility }}</dd>
+    {% if rdoc.aiAnalysis.suggestions.length %}
+  <dt>{{ _('Suggestions') }}</dt>
+  <dd>
+    <ul>
+      {% for s in rdoc.aiAnalysis.suggestions %}
+      <li>{{ s }}</li>
+      {% endfor %}
+    </ul>
+  </dd>
+    {% endif %}
+    {% if rdoc.aiAnalysis.risks.length %}
+  <dt>{{ _('Risks') }}</dt>
+  <dd>
+    <ul>
+      {% for r in rdoc.aiAnalysis.risks %}
+      <li>{{ r }}</li>
+      {% endfor %}
+    </ul>
+  </dd>
+    {% endif %}
+  {% endif %}
+{% endif %}
