@@ -1,0 +1,1 @@
+ssh root@8.133.200.235 "cd ~/Hydro && git pull origin base-deploy && yarn build && node packages/hydrooj/bin/hydrooj.js addon add /root/Hydro/packages/ai-analyzer; pm2 restart hydro-backend && sleep 3 && curl -s -o /dev/null -w '%{http_code}' http://localhost:8888"
