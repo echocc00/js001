@@ -1,0 +1,50 @@
+﻿{% import "components/nothing.html" as nothing with context %}
+{% import "components/paginator.html" as paginator with context %}
+{% extends "layout/basic.html" %}
+{% block content %}
+<div class="row">
+  <div class="medium-12 columns">
+    <div class="section">
+      <div class="section__header">
+        <h1 class="section__title">{{ _('Video') }}</h1>
+        {% if handler.user.hasPerm(PERM_CREATE_VIDEO) %}
+          <div class="section__tools">
+            <a href="{{ url('video_create') }}" class="primary rounded button">
+              <span class="icon icon-add"></span> {{ _('Upload Video') }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+      <div class="section__body">
+        {% if not docs.length %}
+          {{ nothing.render('No videos yet.') }}
+        {% else %}
+          <div class="row">
+            {% for doc in docs %}
+              <div class="medium-4 columns" style="margin-bottom:20px">
+                <div class="section" style="height:100%;overflow:hidden">
+                  <div class="section__body">
+                    <div style="background:#f0f0f0;height:160px;display:flex;align-items:center;justify-content:center;margin-bottom:10px">
+                      <span class="icon icon-play" style="font-size:48px;color:#ccc"></span>
+                    </div>
+                    <h2 style="font-size:16px;margin:0 0 5px">
+                      <a href="{{ url('video_detail', vid=doc.docId) }}">{{ doc.title }}</a>
+                    </h2>
+                    <div class="supplementary" style="font-size:12px">
+                      {% if doc.category %}
+                        <span class="discussion-node-tag">{{ doc.category }}</span>
+                      {% endif %}
+                      <span>{{ _('{0} views').format(doc.views) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          {% if page and count %}{{ paginator.render(page, count) }}{% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

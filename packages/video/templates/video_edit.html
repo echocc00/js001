@@ -1,0 +1,60 @@
+﻿{% import "components/form.html" as form with context %}
+{% extends "layout/basic.html" %}
+{% block content %}
+<div class="row">
+  <div class="medium-9 columns">
+    <div class="section">
+      <div class="section__header">
+        <h1 class="section__title">{{ _('Edit Video') if doc else _('Upload Video') }}</h1>
+      </div>
+      <div class="section__body">
+        <form method="post">
+          <div class="row">
+            <div class="medium-12 columns">
+              <label>{{ _('Title') }}
+                <input name="title" placeholder="{{ _('Title') }}" value="{{ doc.title|default('') }}" class="textbox" autofocus required>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="medium-12 columns">
+              <label>{{ _('URL') }}
+                <input name="url" placeholder="https://www.bilibili.com/video/BVxxx or https://www.youtube.com/embed/xxx" value="{{ doc.url|default('') }}" class="textbox" required>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="medium-6 columns">
+              <label>{{ _('Category') }}
+                <input name="category" placeholder="{{ _('Category') }}" value="{{ doc.category|default('') }}" class="textbox">
+              </label>
+            </div>
+          </div>
+          {{ form.form_textarea({
+                columns:12,
+                label:'Description',
+                name:'description',
+                value:doc.description|default(''),
+                hotkeys:'ctrl+enter:submit',
+                markdown:true,
+                extra_style:'height:300px',
+                extra_textarea_class:'auto-resize'
+              }) }}
+          <div class="row"><div class="columns">
+            <button name="operation" value="{{ 'update' if doc else 'create' }}" data-default-submit type="submit" class="rounded primary button">
+              {{ _('Update') if doc else _('Create') }} (Ctrl+Enter)
+            </button>
+            {% if doc and (handler.user.hasPerm(PERM_EDIT_VIDEO) or handler.user._id == doc.owner) %}
+              <button name="operation" value="delete" type="submit" class="rounded button">{{ _('Delete') }}</button>
+            {% endif %}
+            <button type="button" class="rounded button" onclick="window.history.go(-1)">{{ _('Cancel') }}</button>
+          </div></div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="medium-3 columns">
+    {% include 'components/md_hint.html' %}
+  </div>
+</div>
+{% endblock %}

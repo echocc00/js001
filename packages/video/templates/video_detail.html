@@ -1,0 +1,66 @@
+﻿{% import "components/user.html" as user with context %}
+{% extends "layout/basic.html" %}
+{% block content %}
+<div class="row">
+  <div class="medium-9 columns">
+    <div class="section">
+      <div class="section__body">
+        <!-- Video Embed -->
+        <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-bottom:15px">
+          {% if 'bilibili.com' in doc.url %}
+            <iframe src="{{ doc.url }}" style="position:absolute;top:0;left:0;width:100%;height:100%" frameborder="0" allowfullscreen></iframe>
+          {% elif 'youtube.com' in doc.url or 'youtu.be' in doc.url %}
+            <iframe src="{{ doc.url }}" style="position:absolute;top:0;left:0;width:100%;height:100%" frameborder="0" allowfullscreen></iframe>
+          {% else %}
+            <video src="{{ doc.url }}" controls style="position:absolute;top:0;left:0;width:100%;height:100%"></video>
+          {% endif %}
+        </div>
+        <!-- Title & Meta -->
+        <h1>{{ doc.title }}</h1>
+        <ul class="supplementary list">
+          <li>
+            {{ user.render_inline(udoc) }}
+          </li>
+          <li>{{ datetimeSpan(doc.updateAt)|safe }}</li>
+          {% if doc.category %}
+            <li><span class="discussion-node-tag">{{ doc.category }}</span></li>
+          {% endif %}
+          <li>{{ _('{0} views').format(doc.views) }}</li>
+        </ul>
+        <!-- Description -->
+        {% if doc.description %}
+          <div class="typo richmedia topic__content" style="margin-top:15px">
+            {{ doc.description|markdown|safe }}
+          </div>
+        {% endif %}
+      </div>
+      <!-- Actions -->
+      <ul class="section__footer supplementary dot list">
+        {% if handler.user.hasPerm(PERM_EDIT_VIDEO) or handler.user._id == doc.owner %}
+          <li><a href="{{ url('video_edit', vid=doc.docId) }}">
+            <span class="icon icon-edit"></span> {{ _('Edit') }}
+          </a></li>
+        {% endif %}
+        <li><a href="{{ url('video_main') }}">
+          <span class="icon icon-list"></span> {{ _('Video List') }}
+        </a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="medium-3 columns">
+    <div class="section side">
+      <div class="profile__bg user-profile-bg--1"></div>
+      <div class="section__body">
+        <div class="media sidebar-user-profile">
+          <div class="media__left">
+            <img src="{{ avatarUrl(udoc.avatar, 80) }}" width="80" height="80" class="medium user-profile-avatar">
+          </div>
+          <div class="media__body">
+            <p>{{ user.render_inline(udoc, avatar=false, modbadge=false) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
