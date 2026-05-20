@@ -4,6 +4,7 @@
   &:not(.codicon)
     background-color: lighten($default-color, 50%)
     border: 1px solid $default-color
+    border-radius: $radius-md
     transition: background-color .2s, box-shadow .5s
     transition-timing-function: ease-out-sine
 
@@ -21,11 +22,12 @@
         border-color: $input-focus-color
 
     &.rounded
-      border-radius: rem($form-control-height / 2)
+      border-radius: $radius-full
 
     &.primary
       border-color: $primary-color
       background-color: $primary-color
+      border-radius: $radius-md
 
       &, &:visited, &:hover
         &, .typo &

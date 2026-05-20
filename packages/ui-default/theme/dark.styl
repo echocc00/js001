@@ -1,12 +1,18 @@
-$content-color = #eee
-$content-second-color = #bdbdbd
+// Dark theme palette - indigo-blue tech feel
+$dark-bg-base    = #0b0b14
+$dark-bg-surface = #14142b
+$dark-bg-hover   = #1e1e3a
+$dark-border     = #2a2a45
+$dark-text-primary   = #e8e8f0
+$dark-text-secondary = #9898b8
+$dark-accent     = #818cf8
 
-$accent-color = #55b6e2
-
-$main-background-color = #121212
-$second-background-color = #323334
-$hover-background-color = #424242
-
+$content-color = $dark-text-primary
+$content-second-color = $dark-text-secondary
+$accent-color = $dark-accent
+$main-background-color = $dark-bg-base
+$second-background-color = $dark-bg-surface
+$hover-background-color = $dark-bg-hover
 .theme--dark
   html
     color-scheme: dark
@@ -48,135 +54,135 @@ $hover-background-color = #424242
     color: $content-second-color
 
   .dropdown .menu
-    box-shadow: 0 0.125rem 0.4375rem #3d3d3d
-    background-color: rgb(15, 15, 15)
+    box-shadow: 0 0.125rem 0.4375rem $dark-border
+    background-color: $dark-bg-surface
 
   a.menu__link:not(.disabled):hover, button.menu__link:not(.disabled):hover
-    color: #aaa
-    background-color: rgb(27, 27, 27)
+    color: $dark-text-secondary
+    background-color: $hover-background-color
 
   blockquote, blockquote.blue, blockquote.red, blockquote.yellow, blockquote.warn, blockquote.note
-    background-color: rgb(23, 23, 23)
-    color: #999
+    background-color: $dark-bg-surface
+    color: $dark-text-secondary
 
   blockquote
-    border-left-color: #323232
+    border-left-color: $dark-border
 
   a.menu__link.active, button.menu__link.active, a.menu__link.active:hover, button.menu__link.active:hover
-    background-color: #ed5f82
+    background-color: #ec4899
     color: #fff
 
   .menu__seperator
-    border-top-color: #212121
+    border-top-color: $dark-border
 
   .menu__link
-    color: #aaa
+    color: $dark-text-secondary
 
   .button:not(.codicon)
-    background-color: #212121
-    border: 1px solid #323232
+    background-color: $dark-border
+    border: 1px solid $dark-border
 
   .button:not(.codicon),.button:not(.codicon):visited,.button:not(.codicon):hover,.typo .button:not(.codicon),.typo .button:not(.codicon):visited,.typo .button:not(.codicon):hover
-    color: #aaa
+    color: $dark-text-secondary
 
   .button:not(.codicon):not(.disabled):hover,.button:not(.codicon):not(.disabled):focus
-    background-color: #3d3d3d
-    border-color: #3d3d3d
-    box-shadow: 0 4px 15px rgba(56,56,56,.5)
+    background-color: $dark-border
+    border-color: $dark-border
+    box-shadow: 0 4px 15px rgba($accent-color, 0.15)
 
   .dialog
-    background-color: rgba(31, 31, 31, 0.6)
+    background-color: rgba($dark-bg-base, 0.7)
 
   .dialog.withBg .dialog__content
-    background-color: #1f1f1f
-    border: 1px solid #323232
-    box-shadow: 0 0.125rem 0.625rem rgba(255 255 255 20%)
+    background-color: $dark-bg-hover
+    border: 1px solid $dark-border
+    box-shadow: 0 0.125rem 0.625rem rgba(0,0,0,0.4)
 
   .section__table-header
     background-color: rgba(0, 0, 0, 0.95)
-    box-shadow: 0 0.1875rem 0.125rem rgba(255 255 255 3%)
+    box-shadow: 0 0.1875rem 0.125rem rgba(0,0,0,0.2)
 
   .data-table tr
-    border-top: 1px solid #2b2b2b
-    border-bottom: 1px solid #2b2b2b
+    border-top: 1px solid $dark-border
+    border-bottom: 1px solid $dark-border
 
   .checkbox input
-    border-color: #3f3f3f
+    border-color: $dark-border
 
   .data-table tr:nth-child(even)
-    background-color: #1b1b1b
+    background-color: $dark-bg-surface
 
   .col--ac-tried, .col--ac-tried
-    border-left-color: #2b2b2b
+    border-left-color: $dark-border
 
   .col--status, .col--submit-by, .col--lang, .col--case
-    border-right-color: #2b2b2b
+    border-right-color: $dark-border
 
   .col--role
-    border-left: 1px solid #2b2b2b
+    border-left: 1px solid $dark-border
     border-left-color: rgb(43, 43, 43)
 
   .sidebar-user-profile .user-profile-name
-    color: #bbb
+    color: $dark-text-primary
 
   .section__tab-header-item:hover
-    background-color: #171717
+    background-color: $dark-bg-surface
 
   .sessionlist__item
-    border-bottom-color: #323232
+    border-bottom-color: $dark-border
 
   .pager.pager-top
-    border-bottom-color: #2b2b2b
+    border-bottom-color: $dark-border
     .pager__item
-      border-bottom-color: #2b2b2b
+      border-bottom-color: $dark-border
 
   .pager.pager-bottom
-    border-top-color: #2b2b2b
+    border-top-color: $dark-border
     .pager__item
-      border-top-color: #2b2b2b
+      border-top-color: $dark-border
 
   input
-    background-color: #1f1f1f
+    background-color: $dark-bg-hover
 
   .search>input
-    border-color: #434343
+    border-color: $dark-border
     border-top-color: rgb(67, 67, 67)
     border-bottom-color: rgb(67, 67, 67)
     border-left-color: rgb(67, 67, 67)
     color: #fff
 
   .select
-    border: 1px solid #323232
-    background-color: #1f1f1f
+    border: 1px solid $dark-border
+    background-color: $dark-bg-hover
 
   .select:focus
-    border-color: #2960a0
-    outline-color: #102f4e
+    border-color: $accent-color
+    outline-color: rgba($accent-color, 0.3)
 
   input.textbox, textarea.textbox, span.textbox
-    border: 1px solid #323232
-    background-color: #1f1f1f
+    border: 1px solid $dark-border
+    background-color: $dark-bg-hover
 
   .autocomplete-wrapper input
-    background-color: #1f1f1f
+    background-color: $dark-bg-hover
     color: rgba(255,255,255,.85)
 
   .autocomplete-wrapper
-    border-color: #363636
-    background-color: #1f1f1f
+    border-color: $dark-border
+    background-color: $dark-bg-hover
 
   label:not(.quick-input-list-label)
-    color: #999
+    color: $dark-text-secondary
 
   .scratchpad-container
-    background-color: #1f1f1f
+    background-color: $dark-bg-hover
 
   .toolbar
     background-color: rgba(23, 23, 23, 0.8)
 
   pre[class*=language-]
-    border: 1px solid #323232
-    background-color: #1f1f1f
+    border: 1px solid $dark-border
+    background-color: $dark-bg-hover
 
   code[class*=language-], pre[class*=language-]
     color: #cbc5c6
@@ -188,133 +194,133 @@ $hover-background-color = #424242
     background-color: #ADD6FF26
 
   :not(pre)>code[class*=language-]
-    background-color: #171717
-    border: 1px solid #323232
+    background-color: $dark-bg-surface
+    border: 1px solid $dark-border
 
   .scratchpad__data-input
-    border-left-color: #2f2f2f
-    background-color: #171717
-    color: #999
+    border-left-color: $dark-border
+    background-color: $dark-bg-surface
+    color: $dark-text-secondary
 
   pre, code
-    background-color: #171717
+    background-color: $dark-bg-surface
 
   .scratchpad__toolbar
-    background-color: #18191d
+    background-color: $dark-bg-hover
 
   .scratchpad__toolbar__button.enabled:hover
-    color: #8a94a5
-    background-color: #27282c
+    color: $dark-text-primary
+    background-color: lighten($dark-bg-hover, 5%)
 
   .scratchpad__toolbar__split
-    background-color: #313131
+    background-color: $dark-border
 
   .menu__link.highlight
-    background: rgb(40, 11, 20)
+    background: rgba($accent-color, 0.1)
 
   .typo table thead th
-    background: #1e1e1e
+    background: $dark-bg-hover
     background-color: rgb(30, 30, 30)
 
   .typo table th, .typo table td, .typo table caption
     border-color: #666
-    color: #999
+    color: $dark-text-secondary
 
   body>.marker
-    box-shadow: 0 2px 7px rgba(255 255 255 30%)
-    background-color: #1f1f1f
+    box-shadow: 0 2px 7px rgba(0,0,0,0.4)
+    background-color: $dark-bg-hover
     border-color: #555
 
   body>.marker .marker__toolbar
-    background-color: #18191d
+    background-color: $dark-bg-hover
 
   .messagepad__sidebar
-    border-right-color: #212121
+    border-right-color: $dark-border
 
   .messagepad__list-item:hover
-    border-color: #323232
-    background-color: #1b1b1b
+    border-color: $dark-border
+    background-color: $dark-bg-surface
 
   .messagepad__list-item.active
-    border-color: #ed5f82
-    background-color: rgba(237,95,130,.07)
+    border-color: #ec4899
+    background-color: rgba(236,72,153,.07)
 
   .messagepad__input
-    border-top-color: #212121
+    border-top-color: $dark-border
 
   .section__tab-container.immersive .section__tab-header-item.selected
-    background-color: rgb(15, 15, 15)
-    color: #999
-    box-shadow: 0 0 10px rgba(255 255 255 30%)
+    background-color: $dark-bg-surface
+    color: $dark-text-secondary
+    box-shadow: 0 0 10px rgba(0,0,0,0.4)
 
   .dialog--signin__main
-    background-color: #1f1f1f
-    box-shadow: 0 0 30px rgba(255 255 255 60%)
+    background-color: $dark-bg-hover
+    box-shadow: 0 0 30px rgba(0,0,0,0.5)
 
   .nothing-icon
     filter: brightness(50%)
 
   .scratchpad__data-input:focus
-    background: #1f1f1f
-    border-color: #1c2d40
+    background: $dark-bg-hover
+    border-color: rgba($accent-color, 0.3)
 
   .section__list__item
-    border-bottom-color: #2b2b2b
+    border-bottom-color: $dark-border
 
   .autocomplete-list
-    background-color: #1f1f1f
+    background-color: $dark-bg-hover
     li[aria-selected=true]
-      background-color: #151515
+      background-color: $hover-background-color
     li[data-focus=true]
-      background-color: #101829
+      background-color: rgba($accent-color, 0.15)
       cursor: pointer
 
   .dczcomments__item, .dczcomments__reply
-    border-top-color: #2b2b2b
+    border-top-color: $dark-border
 
   .autocomplete-tag
-    background-color: #ff0000
+    background-color: $dark-accent
 
   .problem__tag-link
-    background-color: #1f1f1f
-    color: #aaa!important
+    background-color: $dark-bg-hover
+    color: $dark-text-secondary!important
 
   label.textbox.material input
     border-color: #333
-    color: #aaa
+    color: $dark-text-secondary
     border-bottom-color: rgba(170,170,170,.4)
 
   .widget--category-filter__drop
-    background-color: #1f1f1f
-    box-shadow: 0 0.125rem 0.4375rem rgba(255 255 255 30%)
+    background-color: $dark-bg-hover
+    box-shadow: 0 0.125rem 0.4375rem rgba(0,0,0,0.4)
 
   hr
-    border-bottom-color: #404040
+    border-bottom-color: $dark-border
 
   .section__footer
-    border-top-color: #2b2b2b
+    border-top-color: $dark-border
 
   .data-table thead>tr
-    border-bottom-color: #2b2b2b
+    border-bottom-color: $dark-border
 
   blockquote.note
-    border-left-color: #29679e
+    border-left-color: $accent-color
     &:before
-      color: #29679e
+      color: $accent-color
 
   blockquote.warn
-    border-left-color: #a80800
+    border-left-color: #ef4444
     &:before
-      color: #a80800
+      color: #ef4444
     
   blockquote.red
-    border-left-color: #a80800
+    border-left-color: #ef4444
 
   blockquote.yellow
-    border-left-color: #8f7c00
+    border-left-color: #f59e0b
 
   blockquote.blue
-    border-left-color: #00396b
+    border-left-color: $accent-color
 
   .token.comment,.token.prolog,.token.doctype,.token.cdata
     color: #57A64A
@@ -368,7 +374,7 @@ $hover-background-color = #424242
 
   @media only screen and (max-width: 600px) {
     .footer__category {
-      border-bottom-color: #1d1d1d
+      border-bottom-color: $dark-border
     }
   }
 
@@ -381,14 +387,14 @@ $hover-background-color = #424242
     
     input
       background-color: $main-background-color !important
-      border-color: #3d3d3d !important
+      border-color: $dark-border !important
     
     .omnibar-content-section
       background-color: $main-background-color !important
-      border-color: #3d3d3d !important
+      border-color: $dark-border !important
 
   &.hasjs .collapsed #status:not([data-status="7"]) .compiler-text-mask
-    background-image: linear-gradient(to bottom, transparent, #000000 25px)
+    background-image: linear-gradient(to bottom, transparent, $dark-bg-base 25px)
 
   &.page--record_detail .subtask
     background-color: #000 !important
