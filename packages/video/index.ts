@@ -11,7 +11,7 @@ const PERM_CREATE_VIDEO = 1n << 72n;
 const PERM_EDIT_VIDEO = 1n << 73n;
 
 // Register permissions in admin panel (mutable PERMS array)
-const hydroBuiltin = require('hydrooj/dist/model/builtin');
+const hydroBuiltin = require('hydrooj/src/model/builtin');
 if (hydroBuiltin.PERMS) {
     hydroBuiltin.PERMS.push(
         { family: 'perm_video', key: PERM_VIEW_VIDEO, desc: 'View videos' },
