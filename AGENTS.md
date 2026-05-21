@@ -117,3 +117,23 @@ curl -s -o /dev/null -w '%{http_code}' http://localhost:8888/ | grep -q 200 || e
 curl -s http://localhost:5050/version | grep buildVersion || echo FAIL: sandbox
 pm2 status | grep hydrojudge | grep online || echo FAIL: hydrojudge
 ```
+
+### 已知问题与 workaround
+
+1. **testlib.h 缺失** — git submodule `packages/hydrojudge/vendor/testlib` 在 tarball 部署时为空
+   - 原因: GitHub tarball 不包含 submodule 内容
+   - 修复: 手动下载 `testlib.h` 到该目录
+   - setup-judge.sh 已自动处理
+
+2. **hydrojudge cookie 认证** — superagent 跟随 redirect 导致 Set-Cookie 丢失
+   - 现象: `TypeError: Cannot read properties of undefined (reading "split")`
+   - 根因: `/login` 返回 302 → superagent 跟随到 `/` → Set-Cookie header 丢失
+   - workaround: judge.yaml 中预置 `cookie: sid=xxx`
+   - setup-judge.sh 自动获取并注入
+
+3. **sandbox flag 名称** — `-http-addr` 不是 `-port`，`-mount-conf` 不是 `--mount-conf`
+
+4. **hydrooj CLI 文件路径** — 需设置 `DEFAULT_STORE_PATH=$HOME/hydro-data/file`
+   - CLI 默认尝试 mkdir /data (无权限)
+   - 环境变量绕过
+
