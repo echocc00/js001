@@ -1,6 +1,7 @@
 ﻿#!/bin/bash
 # Hydro Judge 评测环境安装脚本 (测试机 192.168.2.19)
 # 用法: bash setup-judge.sh
+# 前置: hydro-backend 已运行, MongoDB 已运行
 
 set -e
 
@@ -8,41 +9,38 @@ echo "========================================"
 echo " Hydro Judge 评测环境安装"
 echo "========================================"
 
-# ── 环境变量 ──────────────────────────────
-export PATH=$HOME/node-v22.14.0-linux-x64/bin:$PATH
+export PATH=$HOME/node-v22.14.0-linux-x64/bin:$HOME/bin:$PATH
 HYDRO_CONFIG_DIR="$HOME/.hydro"
-SANDBOX_BIN="/usr/local/bin/sandbox"
+SANDBOX_BIN="$HOME/bin/sandbox"
 SANDBOX_VERSION="1.9.4"
 SANDBOX_URL="https://github.com/criyle/go-judge/releases/download/v${SANDBOX_VERSION}/go-judge_${SANDBOX_VERSION}_linux_amd64v3"
 
 echo ""
-echo "[1/5] 检测系统环境..."
+echo "[1/6] 检测系统环境..."
 echo "  Kernel: $(uname -r)"
 echo "  Arch:   $(uname -m)"
 
-# 检查 cgroup 支持
-if [ -d /sys/fs/cgroup ]; then
-    echo "  cgroup: $(stat -fc %T /sys/fs/cgroup 2>/dev/null || echo 'v1')"
-else
-    echo "  ⚠ cgroup 未挂载，评测功能可能受限"
-fi
-
 # ── 2. 安装 go-judge sandbox ─────────────
 echo ""
-echo "[2/5] 安装 go-judge sandbox v${SANDBOX_VERSION}..."
+echo "[2/6] 安装 go-judge sandbox v${SANDBOX_VERSION}..."
+
+mkdir -p "$HOME/bin"
 
 if [ -f "$SANDBOX_BIN" ]; then
     echo "  sandbox 已存在，跳过下载"
 else
-    wget -q --show-progress "$SANDBOX_URL" -O /tmp/sandbox
-    chmod +x /tmp/sandbox
-    sudo mv /tmp/sandbox "$SANDBOX_BIN"
-    echo "  ✓ sandbox 安装完成"
+    if wget -q --timeout=10 "$SANDBOX_URL" -O "$SANDBOX_BIN"; then
+        chmod +x "$SANDBOX_BIN"
+        echo "  ✓ sandbox 安装完成"
+    else
+        echo "  ⚠ GitHub 下载失败 (网络不通)，请手动上传 sandbox 到 $SANDBOX_BIN"
+        echo "  下载地址: $SANDBOX_URL"
+    fi
 fi
 
 # ── 3. 创建 mount.yaml ──────────────────
 echo ""
-echo "[3/5] 创建 sandbox mount 配置..."
+echo "[3/6] 创建 sandbox mount 配置..."
 
 mkdir -p "$HYDRO_CONFIG_DIR"
 
@@ -97,15 +95,45 @@ MOUNTEOF
 
 echo "  ✓ mount.yaml 已创建"
 
-# ── 4. 创建 judge.yaml ──────────────────
+# ── 4. testlib.h (git submodule) ────────
 echo ""
-echo "[4/5] 创建 hydrojudge 配置..."
+echo "[4/6] 检查 testlib.h..."
 
-# 尝试读取已有 Hydro 配置获取 server_url
+TESTLIB_PATH="$HOME/Hydro/packages/hydrojudge/vendor/testlib/testlib.h"
+if [ -f "$TESTLIB_PATH" ]; then
+    echo "  testlib.h 已存在 ($(wc -c < $TESTLIB_PATH) bytes)"
+else
+    echo "  testlib.h 不存在 (git submodule), 尝试下载..."
+    if wget -q --timeout=10 "https://raw.githubusercontent.com/MikeMirzayanov/testlib/master/testlib.h" -O "$TESTLIB_PATH"; then
+        echo "  ✓ testlib.h 下载完成"
+    else
+        echo "  ⚠ 下载失败，请手动放置 testlib.h 到:"
+        echo "    $TESTLIB_PATH"
+        echo "  来源: https://raw.githubusercontent.com/MikeMirzayanov/testlib/master/testlib.h"
+    fi
+fi
+
+# ── 5. 创建 judge.yaml (带 cookie 注入) ──
+echo ""
+echo "[5/6] 配置 hydrojudge 连接..."
+
 SERVER_URL="http://localhost:8888/"
-if [ -f "$HYDRO_CONFIG_DIR/config.json" ]; then
-    PORT=$(grep -o '"port":[0-9]*' "$HYDRO_CONFIG_DIR/config.json" | head -1 | cut -d: -f2)
-    [ -n "$PORT" ] && SERVER_URL="http://localhost:$PORT/"
+
+echo "  尝试获取 session cookie..."
+COOKIE=""
+if wget -qO /dev/null \
+    --post-data="uname=Hydro&password=judgepass123&rememberme=on" \
+    --header="Content-Type: application/x-www-form-urlencoded" \
+    --save-cookies /tmp/judge_cookies.txt \
+    "$SERVER_URL"login 2>/dev/null; then
+    SID=$(grep 'sid' /tmp/judge_cookies.txt | grep -v 'sid.sig' | awk '{print $NF}')
+    if [ -n "$SID" ]; then
+        COOKIE="sid=$SID"
+        echo "  ✓ cookie 获取成功"
+    fi
+    rm -f /tmp/judge_cookies.txt
+else
+    echo "  ⚠ 无法获取 cookie (judge 需要手动配置)"
 fi
 
 cat > "$HYDRO_CONFIG_DIR/judge.yaml" << JUDGEEOF
@@ -113,75 +141,63 @@ hosts:
   localhost:
     type: hydro
     server_url: $SERVER_URL
-    uname: JUDGE_USERNAME
-    password: JUDGE_PASSWORD
+    uname: Hydro
+    password: judgepass123
     detail: full
+    cookie: $COOKIE
 JUDGEEOF
 
-echo "  ✓ judge.yaml 已创建 (请修改 uname/password)"
-echo "  ⚠ 请编辑 ~/.hydro/judge.yaml 填入 Hydro 账号密码"
-
-# ── 5. 安装/验证 hydrojudge ─────────────
+echo "  ✓ judge.yaml 已创建"
 echo ""
-echo "[5/5] 安装 hydrojudge..."
+echo "  ⚠ 如需修改账号，编辑 ~/.hydro/judge.yaml"
+echo "     默认: Hydro / judgepass123"
+echo "     可用 hydrooj CLI 修改:"
+echo "     cd ~/Hydro && DEFAULT_STORE_PATH=\$HOME/hydro-data/file node packages/hydrooj/bin/hydrooj.js cli user setPassword UID NEWPASS"
 
-if command -v hydrojudge &>/dev/null; then
-    echo "  hydrojudge 已安装: $(hydrojudge --version 2>/dev/null || echo 'ok')"
-else
-    # 尝试从 Hydro 源码安装
-    if [ -d "$HOME/Hydro" ]; then
-        echo "  从 Hydro 源码安装..."
-        cd "$HOME/Hydro"
-        yarn install --immutable 2>/dev/null || yarn install
-        yarn build
-        # 创建 symlink
-        sudo ln -sf "$HOME/Hydro/packages/hydrojudge/node_modules/.bin/hydrojudge" /usr/local/bin/hydrojudge 2>/dev/null || \
-            ln -sf "$HOME/Hydro/packages/hydrojudge/node_modules/.bin/hydrojudge" "$HOME/bin/hydrojudge" 2>/dev/null || true
-        echo "  ✓ hydrojudge 安装完成"
-    else
-        echo "  ⚠ Hydro 源码目录未找到，跳过 hydrojudge 安装"
-        echo "  请手动运行: yarn global add @hydrooj/hydrojudge"
-    fi
-fi
-
-# ── 启动 PM2 服务 ────────────────────────
+# ── 6. 启动服务 ──────────────────────────
 echo ""
-echo "========================================"
-echo " 启动评测服务"
-echo "========================================"
+echo "[6/6] 启动评测服务..."
 
-# 停止旧的 judge 进程（如果存在）
+# 停止旧进程
 pm2 delete sandbox 2>/dev/null || true
 pm2 delete hydrojudge 2>/dev/null || true
 
-# 启动 sandbox（需要 root 权限管理 cgroup）
-pm2 start sandbox --name sandbox -- -mount-conf "$HYDRO_CONFIG_DIR/mount.yaml" --port 5050
+# sandbox (注意: flag 是 -http-addr 和 -mount-conf)
+pm2 start "$SANDBOX_BIN" --name sandbox -- \
+    -mount-conf "$HYDRO_CONFIG_DIR/mount.yaml" \
+    -http-addr 0.0.0.0:5050 \
+    -release
 
-# 等待 sandbox 就绪
 sleep 2
 
-# 启动 hydrojudge
-pm2 start hydrojudge --name hydrojudge
+# hydrojudge
+HYDROJUDGE_BIN="$HOME/Hydro/packages/hydrojudge/node_modules/.bin/hydrojudge"
+if [ ! -f "$HYDROJUDGE_BIN" ]; then
+    echo "  编译 hydrojudge..."
+    cd "$HOME/Hydro" && yarn build 2>&1 | tail -3
+fi
 
+pm2 start "$HYDROJUDGE_BIN" --name hydrojudge
+
+sleep 3
 pm2 save
 
 echo ""
 echo "========================================"
-echo " 安装完成！验证步骤："
+echo " 验证评测链路"
 echo "========================================"
 echo ""
-echo "1. 检查 sandbox 状态:"
-echo "   curl -s http://localhost:5050/version"
+
+FAILS=0
+ps aux | grep mongod | grep -v grep >/dev/null && echo "  [✓] MongoDB" || { echo "  [✗] MongoDB"; FAILS=$((FAILS+1)); }
+[ -f ~/.hydro/config.json ] && echo "  [✓] Config" || { echo "  [✗] Config"; FAILS=$((FAILS+1)); }
+wget -qO- http://localhost:8888/status 2>/dev/null | grep -q Hydro && echo "  [✓] hydro-backend :8888" || { echo "  [✗] hydro-backend :8888"; FAILS=$((FAILS+1)); }
+wget -qO- http://localhost:5050/version 2>/dev/null | grep -q buildVersion && echo "  [✓] sandbox :5050" || { echo "  [✗] sandbox :5050"; FAILS=$((FAILS+1)); }
+pm2 list 2>/dev/null | grep hydrojudge | grep -q online && echo "  [✓] hydrojudge" || { echo "  [✗] hydrojudge"; FAILS=$((FAILS+1)); }
+
 echo ""
-echo "2. 检查 hydrojudge 状态:"
-echo "   pm2 status"
-echo ""
-echo "3. 检查 Hydro 后台评测机连接:"
-echo "   pm2 logs hydrojudge --lines 20"
-echo ""
-echo "4. 4 项基础检查:"
-echo "   ps aux | grep mongod | grep -v grep || echo FAIL: mongod"
-echo "   [ -f ~/.hydro/config.json ] || echo FAIL: no config"
-echo "   curl -s -o /dev/null -w '%{http_code}' http://localhost:8888/ | grep -q 200 || echo FAIL: server"
-echo "   curl -s http://localhost:5050/version | grep buildVersion || echo FAIL: sandbox"
-echo ""
+if [ $FAILS -eq 0 ]; then
+    echo "✅ 全部通过！评测环境已就绪。"
+else
+    echo "⚠ $FAILS 项未通过，请检查上方 [✗] 项。"
+fi
